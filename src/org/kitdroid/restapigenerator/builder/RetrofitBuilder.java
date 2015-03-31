@@ -92,46 +92,5 @@ public class RetrofitBuilder extends ApiBuilder {
     public void getMProductMaxAmount(@Path("token") String token,
                                      Callback<MProductMaxAmountResp> callback);
     */
-    public String getResult(int i) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(getDocComment());
-
-        builder.append("\n");
-        builder.append("public void ");
-        builder.append(getMethodName());
-        builder.append("( ");
-        // parameters
-        List<Parameter> parameters = getParameters();
-        for (Parameter parameter : parameters) {
-            builder.append(parameter.getValue());
-            builder.append(", ");
-        }
-        builder.append("AsyncHttpResponseHandler handler ) {\n");
-        // url
-        builder.append("    String url = ");
-        builder.append(getUrl());
-        builder.append(";\n\n");
-
-        builder.append("    RequestParams params = new RequestParams();\n");
-
-        // set parameters
-        for (Parameter parameter : parameters) {
-            builder.append("    params.put(\"");
-            String name = parameter.getName();
-            builder.append(name);
-            builder.append("\", ");
-            builder.append(name);
-            builder.append(" );\n");
-        }
-        // request
-        builder.append("\n    ");
-        builder.append("send");
-        builder.append(getRequestType().name());
-
-        builder.append("(url, params, handler);");
-        builder.append("\n}\n");
-        return builder.toString();
-    }
 
 }
