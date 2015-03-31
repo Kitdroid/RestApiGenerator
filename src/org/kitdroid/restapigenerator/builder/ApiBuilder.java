@@ -27,12 +27,13 @@ public abstract class ApiBuilder {
         styles.put(Style.OKHttp, new OKHttpBuilder());
     }
 
-
-    private RequestType mRequestType;
+    private RequestType requestType;
     private String docComment;
     private String url;
-    private List<Parameter> parameters;
+    private String host;
+    private String path;
     private String methodName;
+    private List<Parameter> parameters;
 
     private static ApiBuilder create(Style style){
         if(!styles.containsKey(style)){
@@ -41,7 +42,6 @@ public abstract class ApiBuilder {
         return styles.get(style);
     }
 
-
     public static ApiBuilder getBuilder(Style style){
         return create(style);
     }
@@ -49,7 +49,7 @@ public abstract class ApiBuilder {
     public abstract String getResult();
 
     public void setRequestType(RequestType type){
-        mRequestType = type;
+        requestType = type;
     }
 
     public void setComment(String comment) {
@@ -57,6 +57,8 @@ public abstract class ApiBuilder {
     }
 
     public void setUrl(String host,String path){
+        this.host = host;
+        this.path = path;
         url = formatUrl(host, path);
         if(StringUtils.isEmpty(methodName)){
             methodName = formatMethodName(path);
@@ -72,7 +74,7 @@ public abstract class ApiBuilder {
     }
 
     public RequestType getRequestType() {
-        return mRequestType;
+        return requestType;
     }
 
     public String getDocComment() {
@@ -83,6 +85,14 @@ public abstract class ApiBuilder {
         return url;
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
     public List<Parameter> getParameters() {
         return parameters;
     }
@@ -90,23 +100,8 @@ public abstract class ApiBuilder {
     public String getMethodName() {
         return methodName;
     }
-//    public abstract String generate(String requestMethodName, String docComment, String methodName, String url, List<Parameter> parameters);
-//
-//    public String generate(RequestType requestType,
-//                           String comment,
-//                           String host,
-//                           String path,
-//                           String dataTypeLines,
-//                           String parameterLines) {
-//        String docComment = formatDocComment(comment);
-//        String methodName = formatMethodName(path);
-//        String url = formatUrl(host, path);
-//        List<Parameter> parameters = formatParameter(dataTypeLines, parameterLines);
-//
-//        return generate(requestType.name().toLowerCase(), docComment, methodName, url, parameters);
-//    }
 
-
+    //TODO 这里有问题
     protected String splitLineToCamel(String param, String taget){
         String paramTrim = param.trim();
         String tagetTrim = taget.trim();
@@ -122,11 +117,18 @@ public abstract class ApiBuilder {
         while (mc.find()){
             int position=mc.end()-(i++);
             //String.valueOf(Character.toUpperCase(sb.charAt(position)));
-            sb.replace(position-1,position+1,sb.substring(position,position+1).toUpperCase());
+            if(position == sb.length()){
+                sb.replace(position -1,position,"");
+                continue;
+            }
+            String substring = sb.substring(position, position + 1);
+            char c = substring.toCharArray()[0];
+            if((c >='a' && c<='z') || (c >='A' && c<='Z')  ){
+                sb.replace(position-1,position+1,substring.toUpperCase());
+            }
         }
         return sb.toString();
     }
-
 
     protected List<Parameter> formatParameter(String dataTypesStr, String parameterNamesStr){
         String[] types = dataTypesStr.replace(" ", "\n").split("\n");
@@ -148,13 +150,14 @@ public abstract class ApiBuilder {
         return parameters;
     }
 
-
     protected String formatMethodName(@NotNull String path){
         String methodName = splitLineToCamel(path, "/");
         methodName = splitLineToCamel(methodName, "=");
         methodName = splitLineToCamel(methodName, "&");
         methodName = splitLineToCamel(methodName, "\\?");
         methodName = splitLineToCamel(methodName, "\\.");
+        methodName = splitLineToCamel(methodName, "\\{");
+        methodName = splitLineToCamel(methodName, "\\}");
         return methodName.replace(" ", "");
     }
 

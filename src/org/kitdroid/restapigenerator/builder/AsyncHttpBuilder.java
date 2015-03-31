@@ -15,8 +15,8 @@ public class AsyncHttpBuilder extends ApiBuilder {
         StringBuilder builder = new StringBuilder();
 
         builder.append(getDocComment());
-
         builder.append("\n");
+
         builder.append("public void ");
         builder.append(getMethodName());
         builder.append("( ");
