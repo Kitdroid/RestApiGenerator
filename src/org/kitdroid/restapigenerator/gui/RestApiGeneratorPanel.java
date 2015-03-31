@@ -2,6 +2,7 @@ package org.kitdroid.restapigenerator.gui;
 
 import org.kitdroid.restapigenerator.RequestType;
 import org.kitdroid.restapigenerator.Style;
+import org.kitdroid.restapigenerator.builder.ApiBuilder;
 import org.kitdroid.restapigenerator.common.TextUtils;
 import org.kitdroid.restapigenerator.common.UiUtils;
 import org.kitdroid.restapigenerator.generator.Generator;
@@ -196,7 +197,6 @@ public class RestApiGeneratorPanel extends JPanel{
 
     private void doGenerate() {
         Style style = Style.values()[mStyleBox.getSelectedIndex()];
-        Generator generator = GeneratorFactory.create(style);
 
         RequestType requestType = RequestType.values()[mRequestBox.getSelectedIndex()];
         String commentText = mCommentArea.getText();
@@ -210,10 +210,17 @@ public class RestApiGeneratorPanel extends JPanel{
             return;
         }
 
+        ApiBuilder builder = ApiBuilder.getBuilder(style);
+        builder.setRequestType(requestType);
+        builder.setComment(commentText);
+        builder.setUrl(hostText, pathText);
+        builder.setParameters(dataTypeLines,parameterLines);
+        String apiStr = builder.getResult();
 
+        Generator generator = GeneratorFactory.create(style);
         String codeString = generator.generate(requestType,commentText,hostText,pathText, dataTypeLines, parameterLines);
         // TODO 处理生成的代码
-        System.out.println(codeString);
+        System.out.println(apiStr);
     }
 
     private void doClean() {
