@@ -5,6 +5,7 @@ import org.kitdroid.restapigenerator.RequestType;
 import org.kitdroid.restapigenerator.Style;
 import org.kitdroid.restapigenerator.common.TextUtils;
 import org.kitdroid.restapigenerator.model.Parameter;
+import org.kitdroid.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,13 @@ public abstract class ApiBuilder {
         styles.put(Style.OKHttp, new OKHttpBuilder());
     }
 
+
+    private RequestType mRequestType;
+    private String docComment;
+    private String url;
+    private List<Parameter> parameters;
+    private String methodName;
+
     private static ApiBuilder create(Style style){
         if(!styles.containsKey(style)){
             throw new IllegalStateException();
@@ -33,43 +41,55 @@ public abstract class ApiBuilder {
         return styles.get(style);
     }
 
-    private RequestType mRequestType;
-    private String comment;
-    private String host;
-    private String path;
-    private String dataType;
-    private String parameter;
 
-    public static ApiBuilder getNewInstances(Style style){
+    public static ApiBuilder getBuilder(Style style){
         return create(style);
     }
 
-    public abstract String build();
+    public abstract String getResult();
 
     public void setRequestType(RequestType type){
         mRequestType = type;
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        docComment = formatDocComment(comment);
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setUrl(String host,String path){
+        url = formatUrl(host, path);
+        if(StringUtils.isEmpty(methodName)){
+            methodName = formatMethodName(path);
+        }
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setParameters(String dataTypeLines,String parameterLines){
+        parameters = formatParameter(dataTypeLines, parameterLines);
     }
 
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public RequestType getRequestType() {
+        return mRequestType;
     }
 
+    public String getDocComment() {
+        return docComment;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public List<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
 //    public abstract String generate(String requestMethodName, String docComment, String methodName, String url, List<Parameter> parameters);
 //
 //    public String generate(RequestType requestType,

@@ -11,7 +11,7 @@ import java.util.List;
 public class OKHttpBuilder extends ApiBuilder {
 
     @Override
-    public String build() {
+    public String getResult() {
         // TODO
         return null;
     }

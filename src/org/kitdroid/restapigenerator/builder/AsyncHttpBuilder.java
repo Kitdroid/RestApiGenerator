@@ -1,6 +1,5 @@
 package org.kitdroid.restapigenerator.builder;
 
-import org.kitdroid.restapigenerator.generator.BaseGenerator;
 import org.kitdroid.restapigenerator.model.Parameter;
 
 import java.util.List;
@@ -11,30 +10,32 @@ import java.util.List;
  */
 public class AsyncHttpBuilder extends ApiBuilder {
 
-    public String generate(String requestType, String docComment, String methodName, String url, List<Parameter> parameters) {
+    @Override
+    public String getResult() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(docComment);
+        builder.append(getDocComment());
 
         builder.append("\n");
         builder.append("public void ");
-        builder.append(methodName);
+        builder.append(getMethodName());
         builder.append("( ");
         // parameters
-        for (Parameter parameter : parameters){
+        List<Parameter> parameters = getParameters();
+        for (Parameter parameter : parameters) {
             builder.append(parameter.getValue());
             builder.append(", ");
         }
         builder.append("AsyncHttpResponseHandler handler ) {\n");
         // url
         builder.append("    String url = ");
-        builder.append(url);
+        builder.append(getUrl());
         builder.append(";\n\n");
 
         builder.append("    RequestParams params = new RequestParams();\n");
 
         // set parameters
-        for (Parameter parameter : parameters){
+        for (Parameter parameter : parameters) {
             builder.append("    params.put(\"");
             String name = parameter.getName();
             builder.append(name);
@@ -44,16 +45,12 @@ public class AsyncHttpBuilder extends ApiBuilder {
         }
         // request
         builder.append("\n    ");
-        builder.append(requestType.toLowerCase());
+        builder.append("send");
+        builder.append(getRequestType().name());
 
         builder.append("(url, params, handler);");
         builder.append("\n}\n");
         return builder.toString();
-    }
-
-    @Override
-    public String build() {
-        return null;
     }
 
     /*
@@ -70,4 +67,5 @@ public class AsyncHttpBuilder extends ApiBuilder {
     };
     client.post(url, params, handler);
     */
+
 }

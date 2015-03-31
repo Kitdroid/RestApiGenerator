@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RetrofitBuilder extends ApiBuilder {
     @Override
-    public String build() {
+    public String getResult() {
         // TODO
         return null;
     }
