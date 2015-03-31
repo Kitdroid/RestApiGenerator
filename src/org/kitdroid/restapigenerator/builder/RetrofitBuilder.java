@@ -4,7 +4,10 @@ import org.kitdroid.restapigenerator.RequestType;
 import org.kitdroid.restapigenerator.generator.BaseGenerator;
 import org.kitdroid.restapigenerator.model.Parameter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class RetrofitBuilder extends ApiBuilder {
 
-    Pattern PATH_PARAMETER_PATTERN = Pattern.compile("\\{[a-zA-Z]+[a-zA-Z0-9]*&\\}");
+    Pattern PATH_PARAMETER_PATTERN = Pattern.compile("\\{[a-zA-Z]+[a-zA-Z0-9]*\\}");
 
     @Override
     public String getResult() {
@@ -21,9 +24,7 @@ public class RetrofitBuilder extends ApiBuilder {
 
         builder.append(getDocComment());
         builder.append("\n");
-        // TODO get/post
-//        @FormUrlEncoded
-//                @POST("/user/{token}/modOrderContinueStatus.html")
+
         RequestType requestType = getRequestType();
         if(requestType == RequestType.POST){
             builder.append("@FormUrlEncoded");
@@ -41,14 +42,21 @@ public class RetrofitBuilder extends ApiBuilder {
         builder.append("( ");
 
         // parameters
+        List<String> pathParameters = getPathParameters(path);
+        for (String name : pathParameters) {
+            builder.append("@Path(\"");
+            builder.append(name);
+            builder.append("\") String ");
+            builder.append(name);
+            builder.append(", ");
+        }
         List<Parameter> parameters = getParameters();
         for (Parameter parameter : parameters) {
             String name = parameter.getName();
-            if(path.contains("{" + name + "}")){
-                builder.append("@Path(\"");
-            }else {
-                builder.append("@Field(\"");
+            if(pathParameters.contains(name)){
+                continue;
             }
+            builder.append("@Field(\"");
             builder.append(name);
             builder.append("\") ");
             builder.append(parameter.getValue());
@@ -60,15 +68,14 @@ public class RetrofitBuilder extends ApiBuilder {
     }
 
 
-        public void getPathParameters(String path) {
-            //(\\d+)为分组
-
-
-            System.out.println("getPathParameters: " + path);
+        public List<String> getPathParameters(String path) {
             Matcher m = PATH_PARAMETER_PATTERN.matcher(path);
+            List<String> strings = new ArrayList<String>();
             while(m.find()) {
-                System.out.println(">>>>>"+m.group(1));
+                String group = m.group(0);
+                strings.add(group.substring(1,group.length()-1));
             }
+            return strings;
         }
 
 

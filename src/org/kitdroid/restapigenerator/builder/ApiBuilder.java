@@ -101,7 +101,55 @@ public abstract class ApiBuilder {
         return methodName;
     }
 
+    protected String splitLineToCamel(String param){
+        StringBuilder builder = new StringBuilder();
+        char[] chars = param.toCharArray();
+        for(int i = 0; i < chars.length;){
+            char c = chars[i];
+            if(isLetter(c)){
+                builder.append(c);
+                i++;
+                continue;
+            }
+            i = appendNextCharAsUpcase(chars, i + 1, builder) + 1;
+        }
+        return builder.toString();
+    }
+
+    private int appendNextCharAsUpcase(char[] chars, int index, StringBuilder builder){
+        if (index >= chars.length){
+            return index;
+        }
+
+        char c = chars[index];
+        if(isLetter(c)){
+            builder.append(toUpcase(c));
+            return index;
+        }
+        if(isNum(c)){
+            builder.append(c);
+            return appendNextCharAsUpcase(chars,index + 1,builder);
+        }
+        return appendNextCharAsUpcase(chars,index + 1,builder);
+    }
+    private char toUpcase(char c){
+        if(c >= 'a' && c <= 'z'){
+            return (char)(c - 32);
+        }
+        if(c >= 'A' && c <= 'Z'){
+            return c;
+        }
+        throw new IllegalArgumentException("char: " + c + "is not a letter.");
+    }
+
+    private boolean isLetter(char c){
+        return (c >='a' && c<='z') || (c >='A' && c<='Z');
+    }
+    private boolean isNum(char c){
+        return c >=0 && c<=9;
+    }
     //TODO 这里有问题
+    @Deprecated
     protected String splitLineToCamel(String param, String taget){
         String paramTrim = param.trim();
         String tagetTrim = taget.trim();
@@ -151,14 +199,15 @@ public abstract class ApiBuilder {
     }
 
     protected String formatMethodName(@NotNull String path){
-        String methodName = splitLineToCamel(path, "/");
-        methodName = splitLineToCamel(methodName, "=");
-        methodName = splitLineToCamel(methodName, "&");
-        methodName = splitLineToCamel(methodName, "\\?");
-        methodName = splitLineToCamel(methodName, "\\.");
-        methodName = splitLineToCamel(methodName, "\\{");
-        methodName = splitLineToCamel(methodName, "\\}");
-        return methodName.replace(" ", "");
+//        String methodName = splitLineToCamel(path, "/");
+//        methodName = splitLineToCamel(methodName, "=");
+//        methodName = splitLineToCamel(methodName, "&");
+//        methodName = splitLineToCamel(methodName, "\\?");
+//        methodName = splitLineToCamel(methodName, "\\.");
+//        methodName = splitLineToCamel(methodName, "\\{");
+//        methodName = splitLineToCamel(methodName, "\\}");
+//        return methodName.replace(" ", "");
+        return splitLineToCamel(path);
     }
 
     protected String formatDocComment(String comment){
