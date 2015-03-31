@@ -6,14 +6,12 @@ import org.kitdroid.restapigenerator.common.TextUtils;
 import org.kitdroid.restapigenerator.common.UiUtils;
 import org.kitdroid.restapigenerator.generator.Generator;
 import org.kitdroid.restapigenerator.generator.GeneratorFactory;
-import org.kitdroid.restapigenerator.generator.GeneratorUtil;
-import org.kitdroid.restapigenerator.generator.Parameter;
+
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 /**
  * Created by 远航 on 2015/3/11.

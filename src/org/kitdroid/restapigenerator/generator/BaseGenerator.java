@@ -3,6 +3,7 @@ package org.kitdroid.restapigenerator.generator;
 import com.sun.istack.internal.NotNull;
 import org.kitdroid.restapigenerator.RequestType;
 import org.kitdroid.restapigenerator.common.TextUtils;
+import org.kitdroid.restapigenerator.model.Parameter;
 
 import java.awt.*;
 import java.util.ArrayList;

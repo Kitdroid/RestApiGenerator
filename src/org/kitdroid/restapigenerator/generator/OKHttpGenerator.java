@@ -1,5 +1,7 @@
 package org.kitdroid.restapigenerator.generator;
 
+import org.kitdroid.restapigenerator.model.Parameter;
+
 import java.util.List;
 
 /**
