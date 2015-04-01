@@ -3,10 +3,11 @@ package org.kitdroid.restapigenerator.gui;
 import org.kitdroid.restapigenerator.RequestType;
 import org.kitdroid.restapigenerator.Style;
 import org.kitdroid.restapigenerator.builder.ApiBuilder;
-import org.kitdroid.restapigenerator.common.TextUtils;
 import org.kitdroid.restapigenerator.common.UiUtils;
 import org.kitdroid.restapigenerator.generator.Generator;
 import org.kitdroid.restapigenerator.generator.GeneratorFactory;
+import org.kitdroid.util.Log;
+import org.kitdroid.util.StringUtils;
 
 
 import javax.swing.*;
@@ -205,7 +206,8 @@ public class RestApiGeneratorPanel extends JPanel{
         String dataTypeLines = mDataTypeArea.getText();
         String parameterLines = mParametersArea.getText();
 
-        if(TextUtils.isEmpty(hostText)){
+        if(StringUtils.isEmpty(hostText)){
+            // TODO
             UiUtils.showAlert("Host can't be null !");
             return;
         }
@@ -220,7 +222,7 @@ public class RestApiGeneratorPanel extends JPanel{
         Generator generator = GeneratorFactory.create(style);
         String codeString = generator.generate(requestType,commentText,hostText,pathText, dataTypeLines, parameterLines);
         // TODO 处理生成的代码
-        System.out.println(apiStr);
+        Log.i(codeString);
     }
 
     private void doClean() {

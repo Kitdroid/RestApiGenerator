@@ -40,4 +40,7 @@
     <!-- Add your actions here -->
   </actions>
 
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationConfigurable instance="org.kitdroid.restapigenerator.Settings" />
+  </extensions>
 </idea-plugin>

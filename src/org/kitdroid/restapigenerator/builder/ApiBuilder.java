@@ -3,7 +3,6 @@ package org.kitdroid.restapigenerator.builder;
 import com.sun.istack.internal.NotNull;
 import org.kitdroid.restapigenerator.RequestType;
 import org.kitdroid.restapigenerator.Style;
-import org.kitdroid.restapigenerator.common.TextUtils;
 import org.kitdroid.restapigenerator.model.Parameter;
 import org.kitdroid.util.StringUtils;
 
@@ -153,10 +152,10 @@ public abstract class ApiBuilder {
     protected String splitLineToCamel(String param, String taget){
         String paramTrim = param.trim();
         String tagetTrim = taget.trim();
-        if (TextUtils.isEmpty(paramTrim)){
+        if (StringUtils.isEmpty(paramTrim)){
             return "";
         }
-        if(TextUtils.isEmpty(tagetTrim)){
+        if(StringUtils.isEmpty(tagetTrim)){
             return "";
         }
         StringBuilder sb=new StringBuilder(paramTrim);
@@ -185,13 +184,13 @@ public abstract class ApiBuilder {
         int length =  names.length;
         for(int i = 0; i < length; i++){
             String name = names[i];
-            if(TextUtils.isEmpty(name)){
+            if(StringUtils.isEmpty(name)){
                 continue;
             }
             Parameter parameter = new Parameter();
             parameter.setName(name);
             String type = i < types.length ? types[i] : "String";
-            parameter.setTypeName(TextUtils.isEmpty(type) ? "String" : type);
+            parameter.setTypeName(StringUtils.isEmpty(type) ? "String" : type);
             parameters.add(parameter);
         }
 
@@ -224,7 +223,7 @@ public abstract class ApiBuilder {
 
     protected String formatUrl(@NotNull String host, String path){
         StringBuilder builder = new StringBuilder(host);
-        if(!TextUtils.isEmpty(path)){
+        if(!StringUtils.isEmpty(path)){
             builder.append(" + \"");
             builder.append(path.replace(" ", ""));
             builder.append("\"");
